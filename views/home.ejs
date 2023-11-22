@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('partials/head') %>
+  <body class="container">
+    <div class="home-header">
+      <h3>Hi <%=name%> 🙋</h3>
+      <button class="btn btn-outline-danger" onclick="logout()">Logout</button>
+    </div>
+    <div class="home-hero-catchy">
+      <h4>All your pictures in one place</h4>
+      <button
+        class="btn btn-outline-success"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      >
+        Upload
+      </button>
+    </div>
+    <!-- modal starts -->
+    <div
+      class="modal fade bd-example-modal-lg"
+      id="exampleModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Select a picture</h5>
+            <button
+              type="button"
+              class="close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="image-view">
+            <input id="image-select" type="file" accept="image/*" />
+            <img id="image" />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button disabled class="hide btn btn-outline-warning" id="loader">
+              Saving.....
+            </button>
+            <button type="button" class="btn btn-primary show" id="save">
+              Save changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- modal ends -->
+    <div id="gallery" class="gallery-container"> 
+     
+     
+      <div class="gallery-column"> 
+        <% for(var i=0; i<images.column_one.length; i++) {%>
+        <img
+           data-value = "<%=images.column_one[i]?.secure_url%>"
+          src="<%=images.column_one[i].secure_url%>"
+          loading="lazy"
+        />
+        <% } %>
+      </div>
+     
+      <div class="gallery-column"> 
+        <% for(var i=0; i<images.column_two.length; i++) {%>
+        <img 
+        data-value = "<%=images.column_two[i]?.secure_url%>"
+        src="<%=images.column_two[i].secure_url%>"
+          loading="lazy"
+        />
+        <% } %>
+      </div>
+     
+      <div class="gallery-column">
+        <% for(var i=0; i<images.column_three.length; i++) {%>
+        <img
+        data-value = "<%=images.column_three[i]?.secure_url%>"
+        src="<%=images.column_three[i].secure_url%>"
+          loading="lazy"
+        />
+        <% } %>
+      </div>
+      
+      
+    </div>
+    <script>
+      const imageSelect = document.getElementById("image-select");
+      const image = document.getElementById("image");
+      const saveBtn = document.getElementById("save");
+      const loaderBtn = document.getElementById("loader");
+      const gallery = document.getElementById('gallery')
+      var cropper = null;
+      let lastFileName = "";
+      imageSelect.addEventListener("change", (e) => {
+        if (e.target.files.length == 0) return;
+        const file = e.target.files[0];
+        image.src = URL.createObjectURL(file);
+        lastFileName = file.name;
+        if (cropper) {
+          cropper.destroy();
+        }
+        image.onload = () => {
+          cropper = new Cropper(image, {
+            aspectRatio: NaN,
+            zoomable: false,
+            scalable: false,
+            movable: false,
+            background: false,
+            viewMode:1
+          });
+        };
+
+        saveBtn.onclick = () => {
+          cropper.getCroppedCanvas().toBlob(
+            async (blob) => {
+              const formData = new FormData();
+              blob.name = lastFileName;
+              // Pass the image file name as the third parameter if necessary.
+              formData.append("image", blob /*, 'example.png' */);
+
+              // Use `jQuery.ajax` method for example
+              loaderBtn.classList.remove("hide");
+
+              saveBtn.classList.add("hide");
+              const fetchRes = await axios.post("/upload", formData, {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+              });
+              loaderBtn.classList.add("hide");
+              saveBtn.classList.remove("hide");
+              if(fetchRes.status==200) {
+                alert('Image uploaded successfully!') 
+                window.location.reload()
+              }
+            } /*, 'image/png' */
+          );
+        };
+      }); 
+      gallery.onclick=(e)=>{
+          const url = e.target.dataset.value 
+          confirmDownload(url)
+      } 
+
+    function confirmDownload(url) {
+     const isConfirmed = confirm("Do you want to download this image?");
+      if (isConfirmed) {
+        downloadImage(url);
+      }
+}
+
+function downloadImage(url) {
+    const link = document.createElement("a");
+    link.download = `image_${Math.random()*1000}`;
+    link.href = url;
+    link.click();
+   
+}
+
+async function logout () {
+  try { 
+    console.log('called')
+    let confirm = window.confirm("Do you really want to log out?");
+    if(confirm) { 
+
+      const res = await axios.get('/logout') 
+      if(res.status==200) {
+        alert('Logged out!') ; 
+        window.location.reload();
+      }
+      else {
+        alert('Failed to log out')
+      }
+    }
+  } catch (error) {
+    
+  }
+}
+
+    </script>
+  </body>
+</html>

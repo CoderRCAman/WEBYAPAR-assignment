@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('partials/head') %>
+  <body>
+    <div class="container login">
+      <% if (error) { %>
+      <h2 class="text-error"><%= error %></h2>
+      <% } %> <% if (msg) { %>
+      <h2 class="text-msg"><%= msg %></h2>
+      <% } %>
+      <div class="login-wrapper">
+        <!-- image section -->
+        <div class="login-left">
+          <h3>Organize images at one place</h3>
+          <h6>Assignment @WEBYAPAR</h6>
+        </div>
+        <div class="form">
+          <form action="/login" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label"
+                >Email address</label
+              >
+              <input
+                type="email"
+                class="form-control"
+                id="exampleInputEmail1"
+                aria-describedby="emailHelp"
+                name="email"
+                required
+              />
+              <div id="emailHelp" class="form-text">
+                We'll never share your email with anyone else.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label"
+                >Password</label
+              >
+              <input
+                type="password"
+                class="form-control"
+                id="exampleInputPassword1"
+                name="password"
+                required
+              />
+            </div>
+            <div class="mb-3 inquiry">
+              <h6>Don't have an account?</h6>
+              <a href="/signup">Signup</a>
+            </div>
+            <button type="submit" class="btn btn-primary">Signin</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

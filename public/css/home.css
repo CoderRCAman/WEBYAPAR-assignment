@@ -1,0 +1,118 @@
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1em;
+}
+.home-header h3 {
+  color: #0891b2;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.home-hero-catchy {
+  text-align: center;
+  margin-top: 3em;
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+  flex-direction: column;
+  align-items: center;
+}
+.home-hero-catchy h4 {
+  font-size: 1.2rem;
+  color: #94a3b8;
+  border: 1px solid #cbd5e1;
+  padding: 1em;
+  border-radius: 1em;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+.gallery-container {
+  display: grid;
+  gap: 1em;
+  margin-top: 1em;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  padding-bottom: 2em;
+}
+
+.gallery-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  
+}
+.gallery-column img {
+  width: 100%;
+  max-height: 500px;
+  cursor: pointer;
+  background-color: white;
+}
+
+.modal-body img {
+  max-width: 90%;
+  margin-top: 1em;
+  max-height: 400px;
+}
+
+.show {
+  display: block;
+}
+.hide {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  /* mobile screen */
+  .gallery-container {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  /* tablet-screens  */
+  .gallery-container {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1280px) {
+  /* larger than tablet-screens  */
+}
+@media (min-width: 1536px) {
+  /* extra larger than tablet-screens  */
+}
+
+/* svg code  */
+
+.spinner {
+  animation: rotate 2s linear infinite;
+  z-index: 2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -25px 0 0 -25px;
+  width: 50px;
+  height: 50px;
+
+  & .path {
+    stroke: hsl(210, 70, 75);
+    stroke-linecap: round;
+    animation: dash 1.5s ease-in-out infinite;
+  }
+}
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
